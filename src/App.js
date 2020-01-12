@@ -1,13 +1,12 @@
 import React from 'react';
 import './App.css';
-import * as THREE from 'three';
+// import * as THREE from 'three';
+import THREE from "./scripts/getThree"
 
-// import { PI2 } from './utils/constants';
+import { PI2 } from './utils/constants';
 import isEmpty from './utils/isEmpty';
 
 // AudioContext
-// var ctx = new (window.AudioContext || window.webkitAudioContext)(); // creates audioNode
-// var analyser = ctx.createAnalyser(); // creates analyserNode
 import { ctx, analyser } from './utils/getAnalyser';
 
 // ThreeJS
@@ -24,23 +23,34 @@ var settings = {
   B: 0.7,
   fov: 50,
   radius: 35,
-  intensity: 0.06,
+  intensity: 0.08,
   dotSize: 0.2
+  
 };
 
 class App extends React.Component {
   state = {
     source: {},
     audioURLS: [
-      // 'https://a.clyp.it/cwvlsmnd.mp3',
-      // 'https://a.clyp.it/jagqtd5f.mp3',
-      // 'https://a.clyp.it/ybjw5or0.mp3',
-      "https://audio.clyp.it/zha0rxwk.mp3?Expires=1578793822&Signature=Y4pvv3F3SKWiou8ZHqri6tPV-Tx8CY6y1Vsa8vA2g8wNXHqKtdBOYnktAEYhEyltvHjQqbcvMSnmCRYJ50DJFWxnUDFLhZKfOHGiqE0mbBm8fchj28mJifbQEqGnRlnJWwpQsg68ivdXWFcLNe~TsQuxyEAwyDCwGQMgei9hKX4_&Key-Pair-Id=APKAJ4AMQB3XYIRCZ5PA"
+      'https://a.clyp.it/cwvlsmnd.mp3', //rain 
+      // 'https://a.clyp.it/jagqtd5f.mp3', 
+      // 'https://a.clyp.it/h1vtpoe4.mp3',  
+      // 'https://a.clyp.it/mkfjydwq.mp3', //Italo disco
+      // 'https://a.clyp.it/zas30wns.mp3', //sertraline
+      // 'https://a.clyp.it/xj0g30io.mp3', // blackbirds
+      'https://a.clyp.it/fkvlpwft.mp3', // practice9short
+      // 'https://a.clyp.it/bfujpc4c.mp3', // poetry
+        // 'https://a.clyp.it/0ar0p540.mp3', // 6.4
+        'https://a.clyp.it/jtxyzmfx.mp3', // 6.17 old,
+        // 'https://a.clyp.it/p2fpdn5n.mp3', // SHANDREW
+        'https://a.clyp.it/qohhjp5p.mp3', //BEAT2
+      // "https://audio.clyp.it/zha0rxwk.mp3?Expires=1578793822&Signature=Y4pvv3F3SKWiou8ZHqri6tPV-Tx8CY6y1Vsa8vA2g8wNXHqKtdBOYnktAEYhEyltvHjQqbcvMSnmCRYJ50DJFWxnUDFLhZKfOHGiqE0mbBm8fchj28mJifbQEqGnRlnJWwpQsg68ivdXWFcLNe~TsQuxyEAwyDCwGQMgei9hKX4_&Key-Pair-Id=APKAJ4AMQB3XYIRCZ5PA"
     ],
     audioIndex: 0
   };
 
   componentDidMount() {
+    console.log({THREE})
     // Scene
     scene = new THREE.Scene();
 
@@ -58,7 +68,7 @@ class App extends React.Component {
     camera.position.set(0, 0.2, 175);
 
     // Renderer
-    renderer = new THREE.WebGLRenderer({ alpha: true });
+    renderer = new THREE.CanvasRenderer({ alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
 
     // Set Color
@@ -72,23 +82,16 @@ class App extends React.Component {
     // Set up Particles Geometry
     let particle;
     for (let i = 0; i <= 2048; i++) {
-      // CircleGeometry
-      // var geo = new THREE.CircleGeometry(settings.dotSize, 26);
-      // var mat = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-      // particle = particles[i++] = new THREE.Mesh(geo, mat);
 
-      // Sprite
-      var spriteMaterial = new THREE.SpriteMaterial({
-        color: 0xffffff,
+      const material = new THREE.SpriteCanvasMaterial({
+        color: 0x000000,
+        program: function(context) {
+          context.beginPath();
+          context.arc(0, 0, 0.33, 0, PI2);
+          context.fill();
+        }
       });
-
-      // var material = new THREE.SpriteMaterial({
-      //   map: new THREE.CanvasTexture(this.generateSprite()),
-      //   blending: THREE.AdditiveBlending
-      // });
-
-      particle = particles[i++] = new THREE.Sprite(spriteMaterial);
-      particle.scale.set(1, 1, 1);
+      particle = particles[i++] = new THREE.Particle(material);
 
       scene.add(particle);
     }
@@ -111,33 +114,12 @@ class App extends React.Component {
       },
       () => {
         // console.log(particles)
-        this.animate();
-        renderer.render(scene, camera);
+
       }
     );
-  }
+    this.animate();
 
-  generateSprite() {
-    const canvas = document.createElement('canvas');
-    canvas.width = 16*4;
-    canvas.height = 16*4;
-
-    const context = canvas.getContext('2d');
-    const gradient = context.createRadialGradient(
-      canvas.width / 2,
-      canvas.height / 2,
-      0,
-      canvas.width / 2,
-      canvas.height / 2,
-      canvas.width / 2
-    );
-    // gradient.addColorStop(0, 'rgba(255,255,255,1)');
-    gradient.addColorStop(0.2, 'rgba(255,255,0,1)');
-    gradient.addColorStop(0.4, 'rgba(255,0,0,1)');
-    gradient.addColorStop(1, 'rgba(0,0,0,1)');
-    context.fillStyle = gradient;
-    context.fillRect(0, 0, canvas.width, canvas.height);
-    return canvas;
+    window.addEventListener('resize', this.windowResize, false);
   }
 
   animate = () => {
@@ -167,12 +149,7 @@ class App extends React.Component {
 
   animateParticles() {
     const { radius, intensity } = settings;
-    // const { particles } = this.state;
 
-    // //   // Old Test Cube stuff
-    // const { cube } = this.state;
-    // cube.rotation.x += 0.01;
-    // cube.rotation.z += 0.01;
 
     const timeByteData = new Uint8Array(analyser.fftSize);
     const timeFloatData = new Float32Array(analyser.fftSize);
@@ -192,9 +169,18 @@ class App extends React.Component {
       particle.position.x = Math.sin(j) * (j / (j / radius));
       particle.position.y = timeFloatData[j] * timeByteData[j] * intensity;
       particle.position.z = Math.cos(j) * (j / (j / radius));
-      camera.position.y = 35;
+      camera.fov = 35;
+      camera.position.y = 20;
     }
     camera.fov = settings.fov;
+    camera.updateProjectionMatrix();
+  }
+
+  windowResize(){
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    renderer.setSize(width, height);
+    camera.aspect = width / height;
     camera.updateProjectionMatrix();
   }
 
