@@ -5,10 +5,14 @@
   "babel": {
     "presets": [
       "@babel/preset-react"
+    ],
+    "plugins": [
+      "@babel/plugin-proposal-class-properties"
     ]
   },
   "dependencies": {
     "@babel/cli": "^7.7.7",
+    "@babel/plugin-proposal-class-properties": "^7.8.0",
     "@babel/preset-react": "^7.7.4",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",

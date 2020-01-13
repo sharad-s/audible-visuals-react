@@ -35,12 +35,12 @@ class App extends React.Component {
     source: {},
     audioURLS: [
       // 'https://a.clyp.it/cwvlsmnd.mp3', //rain
-      // 'https://a.clyp.it/jagqtd5f.mp3',
+      'https://a.clyp.it/jagqtd5f.mp3',
       // 'https://a.clyp.it/h1vtpoe4.mp3',
-      // 'https://a.clyp.it/mkfjydwq.mp3', //Italo disco
+    //   'https://a.clyp.it/mkfjydwq.mp3', //Italo disco
       // 'https://a.clyp.it/zas30wns.mp3', //sertraline
       // 'https://a.clyp.it/xj0g30io.mp3', // blackbirds
-    //   'https://a.clyp.it/fkvlpwft.mp3', // practice9short
+      'https://a.clyp.it/fkvlpwft.mp3', // practice9short
       // 'https://a.clyp.it/bfujpc4c.mp3', // poetry
       // 'https://a.clyp.it/0ar0p540.mp3', // 6.4
       // 'https://a.clyp.it/jtxyzmfx.mp3', // 6.17 old,
