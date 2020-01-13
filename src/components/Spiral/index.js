@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import THREE from '../../lib/getThree';
 
 import { PI2 } from '../../utils/constants';
@@ -11,6 +11,8 @@ import { ctx, analyser } from '../../utils/getAnalyser';
 var camera, scene, renderer;
 var particles = [];
 var circleCounter;
+
+var parent
 
 // CORS
 var corsProxy = 'https://cors-anywhere.herokuapp.com/';
@@ -38,7 +40,7 @@ class App extends React.Component {
       // 'https://a.clyp.it/mkfjydwq.mp3', //Italo disco
       // 'https://a.clyp.it/zas30wns.mp3', //sertraline
       // 'https://a.clyp.it/xj0g30io.mp3', // blackbirds
-      // 'https://a.clyp.it/fkvlpwft.mp3', // practice9short
+    //   'https://a.clyp.it/fkvlpwft.mp3', // practice9short
       // 'https://a.clyp.it/bfujpc4c.mp3', // poetry
       // 'https://a.clyp.it/0ar0p540.mp3', // 6.4
       // 'https://a.clyp.it/jtxyzmfx.mp3', // 6.17 old,
@@ -50,14 +52,16 @@ class App extends React.Component {
   };
 
   componentDidMount() {
-    // Scene
+    // Get parent element
+    parent = this.poop.parentElement
+
     scene = new THREE.Scene();
 
     // Camera
     const cameraSettings = {
       fov: 20,
-      width: window.innerWidth,
-      height: window.innerHeight
+      width: parent.clientWidth,
+      height: parent.clientHeight
     };
 
     camera = new THREE.PerspectiveCamera(
@@ -70,7 +74,9 @@ class App extends React.Component {
 
     // Renderer
     renderer = new THREE.CanvasRenderer({ alpha: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(parent.clientWidth, parent.clientHeight);
+
+    console.log(cameraSettings)
 
     // Set Color
     renderer.setClearColor(0x000000, 0);
@@ -111,7 +117,7 @@ class App extends React.Component {
   animate = () => {
     requestAnimationFrame(this.animate);
 
-    this.resizeCanvasToDisplaySize()
+    this.resizeCanvasToDisplaySize();
 
     this.animateParticles();
     this.changeCircleRadius();
@@ -194,8 +200,14 @@ class App extends React.Component {
   }
 
   windowResize() {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
+
+
+    let  width = window.innerWidth;
+    let  height = window.innerHeight;
+
+    width = parent.clientWidth;
+    height = parent.clientHeight;
+
     renderer.setSize(width, height);
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
@@ -265,12 +277,16 @@ class App extends React.Component {
 
   render() {
     return (
-      <div onClick={this.handleClick} className="vizcontainer circle">
-        <div onDrop={this.handleDrop} ref={ref => (this.poop = ref)}>
+      <Fragment>
+        <div
+          onClick={this.handleClick}
+          className="vizcontainer circle"
+          ref={ref => (this.poop = ref)}
+        >
           {/* Canvas Goes Here */}
         </div>
         <audio ref={ref => (this.audio = ref)} />
-      </div>
+      </Fragment>
     );
   }
 }

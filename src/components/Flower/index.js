@@ -53,11 +53,14 @@ class App extends React.Component {
     // Scene
     scene = new THREE.Scene();
 
+    // Get parent element
+    const parent = this.poop.parentElement;
+
     // Camera
     const cameraSettings = {
       fov: 20,
-      width: window.innerWidth,
-      height: window.innerHeight
+      width: parent.clientWidth,
+      height: parent.clientHeight
     };
 
     camera = new THREE.PerspectiveCamera(
@@ -70,7 +73,7 @@ class App extends React.Component {
 
     // Renderer
     renderer = new THREE.CanvasRenderer({ alpha: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(parent.clientWidth, parent.clientHeight);
 
     // Set Color
     renderer.setClearColor(0x000000, 0);
@@ -159,15 +162,16 @@ class App extends React.Component {
 
       // FLOWER
       particle.position.x =
-        (settings.aFlower + settings.bFlower * ((settings.flowerAngle / 100) * j)) *
+        (settings.aFlower +
+          settings.bFlower * ((settings.flowerAngle / 100) * j)) *
           Math.cos((settings.flowerAngle / 100) * j) +
         Math.sin(j / (settings.flowerAngle / 100)) * 17;
       particle.position.y =
-        (settings.aFlower + settings.bFlower * ((settings.flowerAngle / 100) * j)) *
+        (settings.aFlower +
+          settings.bFlower * ((settings.flowerAngle / 100) * j)) *
           Math.sin((settings.flowerAngle / 100) * j) +
         Math.cos(j / (settings.flowerAngle / 100)) * 17;
-      particle.position.z =
-        timeFloatData[j] * timeByteData[j] * intensity;
+      particle.position.z = timeFloatData[j] * timeByteData[j] * intensity;
       camera.position.y = 0;
     }
     camera.fov = settings.fov;
